@@ -26,9 +26,9 @@ class PostPagesTests(TestCase):
             description='Тестовое описание 2',
         )
         cls.second_post = Post.objects.create(
-            author=cls.user_2,
+            author=cls.second_user,
             text='Тестовый текст 2',
-            group=cls.group_2,
+            group=cls.second_group,
         )
 
     def setUp(self):
