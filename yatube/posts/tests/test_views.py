@@ -107,6 +107,7 @@ class PostPagesTests(TestCase):
                 self.assertEqual(
                     post_title, f'Профайл пользователя {self.user}'
                 )
+
     def test_post_detail_uses_correct_context(self):
         """Шаблон post_detail сформирован с правильным контекстом."""
         NUM_OF_TEXTS_SYMBOLS_IN_TITLE = 30
