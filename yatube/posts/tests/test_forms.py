@@ -1,8 +1,7 @@
-from posts.forms import PostForm
-from posts.models import Post, Group, User
-from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
+from posts.forms import PostForm
+from posts.models import Group, Post, User
 
 
 class PostFormsTests(TestCase):
@@ -44,8 +43,8 @@ class PostFormsTests(TestCase):
         self.assertEqual(Post.objects.count(), posts_count + 1)
         self.assertTrue(
             Post.objects.filter(
-                text= self.TEST_TEXT,
-                group= self.group.id
+                text=self.TEST_TEXT,
+                group=self.group.id
             ).exists()
         )
 
