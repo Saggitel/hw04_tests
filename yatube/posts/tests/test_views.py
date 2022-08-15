@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from django.urls import reverse
 from django import forms
@@ -108,22 +107,7 @@ class PostPagesTests(TestCase):
                 self.assertEqual(
                     post_title, f'Профайл пользователя {self.user}'
                 )
-
-    def test_post_detail_uses_correct_context(self):
-        """Шаблон post_detail сформирован с правильным контекстом."""
-        NUM_OF_TEXTS_SYMBOLS_IN_TITLE = 30
-        response = self.authorized_client.get(
-            reverse('posts:post_detail', kwargs={
-                'post_id': {self.post.id}
-            }))
-        for post in posts:
-            if post.author == self.user:
-                post_title = post.text[:NUM_OF_TEXTS_SYMBOLS_IN_TITLE]
-                self.assertEqual(
-                    post_title, self.post.text[:NUM_OF_TEXTS_SYMBOLS_IN_TITLE]
-                )
-                self.assertEqual(post, self.post)
-
+                
     def test_post_create_uses_correct_context(self):
         """Шаблон post_create сформирован с правильным контекстом."""
         response = self.authorized_client.get(
