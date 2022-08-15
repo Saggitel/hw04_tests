@@ -1,7 +1,8 @@
+from posts.forms import PostForm
+from posts.models import Post, Group, User
+from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
-from posts.forms import PostForm
-from posts.models import Group, Post, User
 
 
 class PostFormsTests(TestCase):
@@ -30,8 +31,8 @@ class PostFormsTests(TestCase):
         """Валидная форма создает запись в Post."""
         posts_count = Post.objects.count()
         form_data = {
-            'text': {self.TEST_TEXT},
-            'group': {self.group.id},
+            'text': self.TEST_TEXT,
+            'group': self.group.id,
         }
         response = self.authorized_client.post(
             reverse('posts:post_create'),
@@ -39,12 +40,12 @@ class PostFormsTests(TestCase):
         )
         self.assertRedirects(
             response,
-            reverse('posts:profile', kwargs={'username': {self.user}}))
+            reverse('posts:profile', kwargs={'username': self.user}))
         self.assertEqual(Post.objects.count(), posts_count + 1)
         self.assertTrue(
             Post.objects.filter(
-                text={self.TEST_TEXT},
-                group={self.group.id}
+                text= self.TEST_TEXT,
+                group= self.group.id
             ).exists()
         )
 
@@ -53,7 +54,7 @@ class PostFormsTests(TestCase):
         NEW_TEST_TEXT = 'Новый тестовый текст'
         post = self.post
         form_data = {
-            'text': {NEW_TEST_TEXT},
+            'text': NEW_TEST_TEXT,
         }
         response = self.authorized_client.post(
             reverse('posts:post_edit', kwargs={'post_id': post.id}),
@@ -64,4 +65,4 @@ class PostFormsTests(TestCase):
         self.assertRedirects(response, reverse(
             'posts:post_detail', kwargs={'post_id': post.id})
         )
-        self.assertEqual(post.text, {NEW_TEST_TEXT})
+        self.assertEqual(post.text, NEW_TEST_TEXT)

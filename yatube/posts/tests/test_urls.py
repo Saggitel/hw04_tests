@@ -1,11 +1,10 @@
-from http import HTTPStatus
-
 from django.contrib.auth import get_user_model
-from django.test import Client, TestCase
+from django.test import TestCase, Client
+from http import HTTPStatus
 from django.urls import reverse
-from posts.models import Group, Post, User
 
-User = get_user_model()
+
+from posts.models import Group, Post, User
 
 
 class PostURLTests(TestCase):
@@ -33,13 +32,13 @@ class PostURLTests(TestCase):
         url_names = {
             reverse('posts:index'): HTTPStatus.OK,
             reverse('posts:group_list', kwargs={
-                'slug': {self.group.slug}
+                'slug': self.group.slug
             }): HTTPStatus.OK,
             reverse('posts:profile', kwargs={
-                'username': {self.user}
+                'username': self.user
             }): HTTPStatus.OK,
             reverse('posts:post_detail', kwargs={
-                'post_id': {self.post.id}
+                'post_id': self.post.id
             }): HTTPStatus.OK,
         }
         for url, status in url_names.items():
