@@ -107,7 +107,7 @@ class PostPagesTests(TestCase):
                 self.assertEqual(
                     post_title, f'Профайл пользователя {self.user}'
                 )
-                
+         
     def test_post_create_uses_correct_context(self):
         """Шаблон post_create сформирован с правильным контекстом."""
         response = self.authorized_client.get(
