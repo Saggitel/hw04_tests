@@ -2,9 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from django.urls import reverse
 from django import forms
-from posts.models import Post, Group
-
-User = get_user_model()
+from posts.models import Post, Group, User
 
 
 class PostPagesTests(TestCase):
@@ -22,13 +20,13 @@ class PostPagesTests(TestCase):
             text='Тестовый текст',
             group=cls.group,
         )
-        cls.user_2 = User.objects.create_user(username='test_user_2')
-        cls.group_2 = Group.objects.create(
+        cls.second_user = User.objects.create_user(username='test_user_2')
+        cls.second_group = Group.objects.create(
             title='Тестовая группа 2',
             slug='test_slug_2',
             description='Тестовое описание 2',
         )
-        cls.post_2 = Post.objects.create(
+        cls.second_post = Post.objects.create(
             author=cls.user_2,
             text='Тестовый текст 2',
             group=cls.group_2,
@@ -45,16 +43,16 @@ class PostPagesTests(TestCase):
             reverse('posts:index'): 'posts/index.html',
             reverse('posts:post_create'): 'posts/create_post.html',
             reverse('posts:profile', kwargs={
-                'username': f'{self.user}'
+                'username': {self.user}
             }): 'posts/profile.html',
             reverse('posts:post_detail', kwargs={
-                'post_id': f'{self.post.id}'
+                'post_id': {self.post.id}
             }): 'posts/post_detail.html',
             reverse('posts:post_edit', kwargs={
-                'post_id': f'{self.post.id}'
+                'post_id': {self.post.id}
             }): 'posts/create_post.html',
             reverse('posts:group_list', kwargs={
-                'slug': f'{self.group.slug}'
+                'slug': {self.group.slug}
             }): 'posts/group_list.html',
         }
         for reverse_name, template in templates_pages_names.items():
@@ -79,7 +77,7 @@ class PostPagesTests(TestCase):
         """Шаблон group_posts сформирован с правильным контекстом."""
         response = self.authorized_client.get(
             reverse('posts:group_list', kwargs={
-                'slug': f'{self.group.slug}'
+                'slug': {self.group.slug}
             }))
         posts = response.context['page_obj']
         for post in posts:
@@ -99,7 +97,7 @@ class PostPagesTests(TestCase):
         """Шаблон profile сформирован с правильным контекстом."""
         response = self.authorized_client.get(
             reverse('posts:profile', kwargs={
-                'username': f'{self.user}'
+                'username': {self.user}
             }))
         posts = response.context['page_obj']
         for post in posts:
@@ -116,9 +114,8 @@ class PostPagesTests(TestCase):
         NUM_OF_TEXTS_SYMBOLS_IN_TITLE = 30
         response = self.authorized_client.get(
             reverse('posts:post_detail', kwargs={
-                'post_id': f'{self.post.id}'
+                'post_id': {self.post.id}
             }))
-        posts = response.context['post_list']
         for post in posts:
             if post.author == self.user:
                 post_title = post.text[:NUM_OF_TEXTS_SYMBOLS_IN_TITLE]
@@ -164,8 +161,8 @@ class PostPagesTests(TestCase):
         post_with_group = self.post
         reverse_names = [
             reverse('posts:index'),
-            reverse('posts:group_list', kwargs={'slug': f'{self.group.slug}'}),
-            reverse('posts:profile', kwargs={'username': f'{self.user}'})
+            reverse('posts:group_list', kwargs={'slug': {self.group.slug}}),
+            reverse('posts:profile', kwargs={'username': {self.user}})
         ]
         for reverse_name in reverse_names:
             with self.subTest():
@@ -179,7 +176,7 @@ class PostPagesTests(TestCase):
         post_with_group = self.post
         response = self.guest_client.get(
             reverse('posts:group_list', kwargs={
-                'slug': f'{self.group_2.slug}'}
+                'slug': {self.second_group.slug}}
             )
         )
         self.assertNotIn(
